@@ -4,16 +4,16 @@ namespace fpcm\modules\nkorg\sitemaplinks\events\editor;
 
 final class addLinks extends \fpcm\module\event {
 
-    public function run()
+    public function run() : \fpcm\module\eventResult
     {
         /* @var $config \fpcm\model\system\config */
         $config = \fpcm\classes\loader::getObject('\fpcm\model\system\config');
         
         $path = realpath($config->module_nkorgsitemaplinks_sitemappath);
-        
+
         if (!trim($path) || !file_exists($path)) {
             trigger_error('Sitemap xml file '.$config->module_nkorgsitemaplinks_sitemappath.' does not exists!');
-            return $this->data;
+            return (new \fpcm\module\eventResult())->setData($this->data);
         }
         
         $xmlObject = new \SimpleXMLElement(file_get_contents($config->module_nkorgsitemaplinks_sitemappath));
@@ -25,7 +25,7 @@ final class addLinks extends \fpcm\module\event {
             );
         };
 
-        return $this->data;
+        return (new \fpcm\module\eventResult())->setData($this->data);
     }
 
     public function init(): bool
